@@ -14,27 +14,30 @@ opendf = 'openloop/openloop.fits'
 closed = 'test_2/test_data_2/test_data.fits'
 logfile = 'test_2/test_data_2/test_data.log'
 
+# starting and ending frames of the open/closed loops
 open_start = [43804]
 open_stop = [44229]
 close_start = [44230]
 close_stop = [44626]
 
-#for line in open(logfile, 'r'):
-#    l = line.split()
-#    if l[2] = 'STATE_CHANGE_CLOSE_LOOP':
-
+# Extraction of the data from the .fits file
 loop = pyfits.getdata(datadir+closed)
 frame = loop.field(0)
 grad = loop.field(4)
 hodm = loop.field(5)
 ttm = loop.field(6)
 
+# xdm is the index of the DM Actuators
 xdm = numpy.arange(len(hodm[0])+len(ttm[0]))
+# xrs is the index of the reference slopes
 xrs = numpy.arange(len(grad[0]))
 
+# OL are frames in open loop, CL are frames in closed loop
 OL = scipy.where( (frame > open_start[0]) & (frame < open_stop[0]))[0]
 CL = scipy.where( (frame > close_start[0]) & (frame < close_stop[0]))[0]
 
+# Determines the initial actuator position by looking at the last frame of
+# the open-loop data
 initial_act_pos = numpy.append(hodm[OL][-1], ttm[OL][-1])
 
 fig.clear()
@@ -54,11 +57,14 @@ def init():
     newdmpos.set_data([], [])
     return dmposOL, dmposCL
 
+# Sets integrand initially to zero
 integrand = numpy.zeros(len(xdm))
 
 def animate(i):
     global integrand
+    # Calculates the product of the CM and the gradients
     delta = numpy.array(CM.dot(grad[CL][i]).tolist()[0])
+    # Adds to the integrand, multiplying by the gain (-0.1)
     integrand -= delta*0.1
     dmposCL.set_data(xdm, numpy.append(hodm[CL][i], ttm[0]))
     newdmpos.set_data(xdm, initial_act_pos + integrand)

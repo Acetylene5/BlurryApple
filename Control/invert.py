@@ -27,12 +27,12 @@ def pseudoInverse(filename, numFilteredModes=50):
     
     return retval, numpy.max(svs)/numpy.min(svs), retval.dot(A)
 
-HODM_IMdf = '/home/deen/Data/GRAVITY/InteractionMatrices/HODM_IM_RT.fits'
+HODM_IMdf = './Data/HODM_IM_RefSlope0.fits'
 #HODM_IMdf = 'HODM_Calibration_150813.fits'
 #HODM_IMdf = 'HO_IM_1021.fits'
 HODM_CMdf = 'HODM_CM'
 
-TTM_IMdf = '/home/deen/Data/GRAVITY/InteractionMatrices/TT_IM.fits'
+TTM_IMdf = './Data/TTM_IM_RefSlope0.fits'
 #TTM_IMdf = 'TTM_Calibration_150813.fits'
 TTM_CMdf = 'TTM_CM.fits'
 
@@ -48,19 +48,19 @@ for i in range(57):
     CM = numpy.resize(inv, (62, 136))
     CM[-2] = A[0]
     CM[-1] = A[1]
-    pyfits.writeto(HODM_CMdf+str(i)+'.fits', CM, clobber=True)
-    pyfits.writeto("ident_"+str(i)+'.fits', junk.T, clobber=True)
+    pyfits.writeto('Output/'+HODM_CMdf+str(i)+'.fits', CM, clobber=True)
+    pyfits.writeto('Output/ident_'+str(i)+'.fits', junk.T, clobber=True)
 
 zeros = numpy.zeros(CM.shape, dtype=numpy.float32)
-pyfits.writeto("Zeros.fits", zeros, clobber=True)
+pyfits.writeto("Output/Zeros.fits", zeros, clobber=True)
 addone = zeros.copy()
 addone[9][37] = 1.0
-pyfits.writeto("test.fits", addone, clobber=True)
+pyfits.writeto("Output/test.fits", addone, clobber=True)
 
 just_TT = zeros.copy()
 #just_TT[-2] = #A[0]
 just_TT[-1] = numpy.ones(len(A[0]), dtype = numpy.float32)
-pyfits.writeto("justTT.fits", just_TT, clobber=True)
+pyfits.writeto("Output/justTT.fits", just_TT, clobber=True)
 
 
 

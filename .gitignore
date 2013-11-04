@@ -36,6 +36,10 @@ nosetests.xml
 .pydevproject
 
 # images
-.fits
-.png
-.mp4
+*.fits
+*.png
+*.mp4
+*.tgz
+*.tar.gz
+*.dat
+*.tar

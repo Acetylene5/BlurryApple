@@ -3,29 +3,38 @@ import matplotlib.pyplot as pyplot
 import numpy
 import pyfits
 
-oldf = '/home/deen/Data/GRAVITY/InfluenceFunctions/IF_cube_2012.fits'
-newf = '/home/deen/Data/GRAVITY/InfluenceFunctions/IF_cube_041113.fits'
-newf = '/home/deen/Data/GRAVITY/InfluenceFunctions/IF_cube.fits'
-
-old = pyfits.getdata(oldf)
-new = pyfits.getdata(newf)
+datadir = '/home/deen/Data/GRAVITY/InfluenceFunctions/'
+newf = datadir+'IF_cube.fits'
+newest = pyfits.getdata(newf)
 
 fig = pyplot.figure(0)
 
-i = 0
-for actuator in zip(old, new):
-    fig.clear()
-    ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
-    old_nans = numpy.isnan(actuator[0])
-    new_nans = numpy.isnan(actuator[1])
+def loadMACAO(index):
+    datafile = open(datadir+'IF_DM4_act%02d.dat'%index, 'r')
+    retval = []
+    for line in datafile:
+        retval.append(numpy.array(line.split(), dtype = numpy.float32))
 
-    actuator[0][old_nans] = 0.0
-    actuator[1][new_nans] = 0.0
+    return retval
+
+i = 0
+for new in zip(newest):
+    old = loadMACAO(i)
+    fig.clear()
+    ax1 = fig.add_axes([0.1, 0.1, 0.4, 0.4])
+    ax2 = fig.add_axes([0.5, 0.5, 0.4, 0.4])
+    #old_nans = numpy.isnan(old)
+    #new_nans = numpy.isnan(new)
+
+    #old[old_nans] = 0.0
+    #new[new_nans] = 0.0
 
     print i
     i += 1
-    diff = ax.imshow(actuator[1])
-    fig.colorbar(diff)
+    o = ax1.imshow(old)
+    n = ax2.imshow(new[0])
+    #diff = ax.imshow(actuator[1])
+    fig.colorbar(o)
     fig.show()
     raw_input()
 

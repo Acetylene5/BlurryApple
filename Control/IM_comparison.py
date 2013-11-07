@@ -34,4 +34,4 @@ ax.plot(data[0].T[8])
 #ax.imshow(data[3])
 #print amplitude[3]
 
-fig.show()
+fig.show

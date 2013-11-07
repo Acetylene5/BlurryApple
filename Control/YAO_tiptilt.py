@@ -34,10 +34,8 @@ fig.clear()
 ax1=fig.add_axes([0.1, 0.1, 0.8, 0.4])
 ax2=fig.add_axes([0.1, 0.5, 0.8, 0.4])
 ax1.plot(V[1,:])
-ax1.plot(V[2,:])
-
-U,S,V = svd(meas)
-ax2.plot(V[1,:])
 ax2.plot(V[2,:])
-
+ax1.text(2, 0.3, "Tip")
+ax2.text(2, 0.3, "Tilt")
 fig.show()
+fig.savefig("YAO_tiptilt.png")

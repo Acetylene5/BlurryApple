@@ -14,7 +14,9 @@ for i in range(4):
 
 for actuator in range(60):
     flat[0][actuator] += 0.3
-    pyfits.writeto("Output/poked_"+str(actuator)+".fits", flat, clobber=True)
-    flat[0][actuator] -= 0.3
+    pyfits.writeto("Output/poked+"+str(actuator)+".fits", flat, clobber=True)
+    flat[0][actuator] -= 0.6
+    pyfits.writeto("Output/poked-"+str(actuator)+".fits", flat, clobber=True)
+    flat[0][actuator] += 0.3
 
 pyfits.writeto("Output/flat.fits", flat, clobber=True)

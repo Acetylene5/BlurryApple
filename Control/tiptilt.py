@@ -8,8 +8,9 @@ import os
 import re
 
 datadir = '/home/deen/Data/GRAVITY/InteractionMatrices/'
-datafiles = os.listdir(datadir)
-#datafiles = ["HODM_IM_RT.fits", "HO_IM_Oct282013.fits", "HO_IM.fits", 'HO_IM_1021.fits', "HODM_IM_RefSlope0.fits", "IM_03Jun.fits", "IM_AIT_HODM_Flat_MSV.fits"]
+#datafiles = os.listdir(datadir)
+#datafiles = ["HODM_HighSNR_IM.fits", "HODM_HighSNR_IM_1.fits", "HODM_HighSNR_IM_2.fits", "HODM_HighSNR_IM_3.fits", "HODM_HighSNR_IM_4.fits", "HODM_HighSNR_IM_5.fits", "HODM_HighSNR_IM_6.fits", "HODM_HighSNR_IM_7.fits", "HODM_HighSNR_IM_8.fits"]
+datafiles = ["HODM_rapid_016.fits","HODM_rapid_017.fits","HODM_rapid_018.fits","HODM_rapid_019.fits","HODM_rapid_020.fits","HODM_rapid_021.fits","HODM_rapid_022.fits","HODM_rapid_023.fits"]
 
 fig = pyplot.figure(0)
 fig.clear()
@@ -17,15 +18,18 @@ ax1=fig.add_axes([0.1, 0.15, 0.8, 0.4])
 ax2=fig.add_axes([0.1, 0.55, 0.8, 0.4])
 
 dates = []
+amplitudes = []
 tips = []
 tilts = []
 
 for df in datafiles:
-    if ((df.find('TT') == -1) & (df.find("IM") != -1)):
+    #if ((df.find('TT') == -1) & (df.find("rapid") != -1)):
+    if True:#if ((df.find('TT') == -1) & (df.find("IM") != -1) & (df.find("fits") != -1)):
         measdf = datadir+df
         meas = pyfits.getdata(measdf)
         head = pyfits.getheader(measdf)
         dates.append(datetime.datetime.strptime(head["DATE"], "%Y-%m-%dT%H:%M:%S.%f"))
+        amplitudes.append(head["AMPLITUDE"])
         meas = scipy.matrix(meas)
         U,S,V = svd(meas)
 
@@ -36,7 +40,8 @@ dates = numpy.array(dates)
 chronology = dates.argsort()
 
 for i in chronology:
-    ax1.plot(tips[i], label = dates[i].strftime("Day %j"))
+    #ax1.plot(tips[i], label = dates[i].strftime("Day %j"))
+    ax1.plot(tips[i], label = "A = "+str(amplitudes[i]))
     ax2.plot(tilts[i])
 
 box = ax1.get_position()

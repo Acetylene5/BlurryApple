@@ -6,7 +6,7 @@ import matplotlib.pyplot as pyplot
 datadir = '/home/deen/Data/GRAVITY/InteractionMatrices/'
 
 synthdf = datadir+'gravity_on_axis_K7-mat.fits'
-measdf = datadir+'HO_IM.fits'
+measdf = datadir+'HODM_HighSNR_IM_8.fits'
 
 synth = pyfits.getdata(synthdf)
 meas = pyfits.getdata(measdf)

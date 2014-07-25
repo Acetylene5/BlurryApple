@@ -3,7 +3,9 @@ import numpy
 import pyfits
 from scipy.linalg import *
 import matplotlib.pyplot as pyplot
+import inversion
 
+#"""
 def pseudoInverse(filename, numFilteredModes=50):
     A = scipy.matrix(pyfits.getdata(filename))
 
@@ -18,22 +20,25 @@ def pseudoInverse(filename, numFilteredModes=50):
     for i in range(len(D)):
         newS[i][i] = D[i]
 
-    S = newS.copy()
+    #S = newS.copy()
 
-    retval = scipy.matrix(V.T.dot(S.T.dot(U.T)), dtype=numpy.float32)
+    retval = scipy.matrix(V.T.dot(newS.T.dot(U.T)), dtype=numpy.float32)
 
-    singular_values = S.diagonal()
+    singular_values = newS.diagonal()
     svs = singular_values[singular_values.nonzero()[0]]
-    
+    #print asdf
     return retval, numpy.max(svs)/numpy.min(svs), retval.dot(A)
+#"""
 
-HODM_IMdf = './Data/HODM_IM_RefSlope0.fits'
+datadir = '/home/deen/Data/GRAVITY/InteractionMatrices/'
+
+HODM_IMdf = datadir+'HODM_28nov.fits'
 #HODM_IMdf = 'HODM_Calibration_150813.fits'
 #HODM_IMdf = 'HO_IM_1021.fits'
 HODM_CMdf = 'HODM_CM'
 
-TTM_IMdf = './Data/TTM_IM_RefSlope0.fits'
-#TTM_IMdf = 'TTM_Calibration_150813.fits'
+TTM_IMdf = datadir+'TTM_HighSNR_IM_1.fits'
+#TTM_IMdf = datadir+'TT_IM.fits'
 TTM_CMdf = 'TTM_CM.fits'
 
 A = scipy.matrix(pyfits.getdata(TTM_IMdf)).getI()
@@ -45,6 +50,7 @@ for i in range(57):
     inv, cn, junk = pseudoInverse(HODM_IMdf, i+1)
     fmodes.append(i+1)
     cns.append(cn)
+    #CM = inv
     CM = numpy.resize(inv, (62, 136))
     CM[-2] = A[0]
     CM[-1] = A[1]

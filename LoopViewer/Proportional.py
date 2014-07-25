@@ -71,9 +71,9 @@ def animate(i):
 ani = animation.FuncAnimation(fig, animate, numpy.arange(0, len(CL)),
         interval=15, blit=True, init_func=init)
 
-ani.save('Proportional_test.mp4', dpi=320)
+#ani.save('Proportional_test.mp4', dpi=320)
 
 print "done"
 
-#fig.show()
+fig.show()
 

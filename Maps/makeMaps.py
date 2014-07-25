@@ -18,7 +18,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'Acq.DET1.FLAT'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #==============REFSLOPE
 
@@ -32,7 +32,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=32768, bscale=1)
 hdu.header.append(('EXTNAME', 'Acq.DET1.BACKGROUND'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========DARK==================================
 data = numpy.zeros((72,72), dtype=numpy.int16)
@@ -44,7 +44,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=32768, bscale=1)
 hdu.header.append(('EXTNAME', 'Acq.DET1.DARK'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========DEAD==================================
 data = numpy.zeros((72,72), dtype=numpy.int16)
@@ -56,7 +56,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=32768, bscale=1)
 hdu.header.append(('EXTNAME', 'Acq.DET1.DEAD'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========REFSLP==================================
 data = numpy.ones((1,136), dtype=numpy.float32)*1.5
@@ -67,10 +67,10 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'Acq.DET1.REFSLP'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========THRESH==================================
-data = numpy.zeros((1,68), dtype=numpy.int16)
+data = numpy.ones((1,68), dtype=numpy.int16)*1000.0
 
 outfile = 'Acq.DET1.THRESH.fits'
 
@@ -79,7 +79,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=32768, bscale=1)
 hdu.header.append(('EXTNAME', 'Acq.DET1.THRESH'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 
 #=========WEIGHT==================================
@@ -91,7 +91,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'Acq.DET1.WEIGHT'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========Recn.ACT_USER_TO_LOGICAL_MAP============
 data = numpy.arange(nacts+2, dtype=numpy.int32)
@@ -103,7 +103,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int32', bzero=0, bscale=1)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========Recn.HODM_ACT_USER_TO_LOGICAL_MAP=====
 data = numpy.arange(nacts+2, dtype=numpy.int32)
@@ -115,7 +115,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int32', bzero=0, bscale=1)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========Recn.ACT_UNSCR_MAP============
 data = numpy.array([numpy.arange(nacts+2, dtype=numpy.int32)])
@@ -127,7 +127,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int32', bzero=0, bscale=1)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========Recn.REC1.CM============
 data = numpy.zeros((nacts, 2*naps), dtype=numpy.float32)
@@ -141,7 +141,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========Recn.SIMVECTOR============
 data = numpy.zeros((1,20*naps), dtype=numpy.float32)
@@ -155,7 +155,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========Recn.SUBAP_UNSCR_MAP.fits============
 data = numpy.zeros((1,2*naps), dtype=numpy.int32)
@@ -170,7 +170,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=0, bscale=1)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========CODE.MIRROR_HODM.QSPATTERN.fits======
 data = numpy.zeros((1,nacts), dtype=numpy.float32)
@@ -181,7 +181,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'CODE.MIRROR_HODM.QSPATTERN'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=======CODE.MIRROR_HODM.USERMAPPING.fits========
 data = numpy.zeros((1,nacts), dtype=numpy.int32)
@@ -196,7 +196,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=0, bscale=1)
 hdu.header.append(('EXTNAME', 'CODE.MIRROR_HODM.USERMAPPING'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #======HOCtr.ACT_POS_REF_MAP.fits===========
 data = numpy.zeros((1,nacts), dtype=numpy.float32)
@@ -207,7 +207,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #======HOCtr.SMA_BASIS.fits===========
 data = numpy.zeros((1,nacts*nacts), dtype=numpy.float32)
@@ -221,7 +221,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HOCtr.SMA_BASIS'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #======HOCtr.AWF_IM_KERNEL.fits===========
 data = numpy.ones((1,nacts*3), dtype=numpy.float32)
@@ -232,7 +232,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HOCtr.AWF_IM_KERNEL'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #======HOCtr.ACT_UNSCR_MAP.fits===========
 data = numpy.zeros((1,nacts), dtype=numpy.int32)
@@ -247,7 +247,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=0, bscale=1)
 hdu.header.append(('EXTNAME', 'HOCtr.ACT_USCR_MAP'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=====HOCtr.HO_TO_TT.fits================
 data = numpy.ones((1,2*nacts), dtype=numpy.float32)
@@ -258,7 +258,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HOCtr.HO_TO_TT'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #======HOCtr.PRA_PISTON_MODE.fits================
 data = numpy.ones((1,nacts), dtype=numpy.float32)
@@ -269,7 +269,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HOCtr.PRA_PISTON_MODE'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #========HOCtr.PRA_PISTON_PROJECTION.fits=========
 data = numpy.ones((1,nacts), dtype=numpy.float32)
@@ -280,7 +280,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HOCtr.PRA_PISTON_PROJECTION'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #========HOCtr.PRA_PISTON_PROJECTION2.fits=========
 data = numpy.ones((1,nacts), dtype=numpy.float32)
@@ -291,7 +291,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HOCtr.PRA_PISTON_PROJECTION2'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=======HOCtr.TT_TO_HO.fits=========================
 data = numpy.zeros((nacts, 2), dtype=numpy.float32)
@@ -302,7 +302,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HOCtr.TT_TO_HO'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========HORecnCalibrat.REF_IM.fits==================
 data = numpy.zeros((2*naps, nacts), dtype=numpy.float32)
@@ -313,7 +313,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HORecnCalibrat.REF_IM'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========HORecnCalibrat.ZONAL_60.fits=================
 data = numpy.zeros((nacts, nacts), dtype=numpy.float32)
@@ -327,10 +327,11 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'HORecnCalibrat.ZONAL_49'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
+
 
 #=========TTCtr.ACT_POS_REF_MAP.fits====================
-data = [0.05, -0.025]
+data = [0.06, -0.035]
 
 data =  numpy.array(data, dtype='float32')
 
@@ -339,7 +340,7 @@ outfile = 'TTCtr.ACT_POS_REF_MAP.fits'
 hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', ''))
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========LoopDisplaySrv.SUBAP_MAP.fits=================
 data = [[ 0,  0,  1,  2,  3,  4,  5,  0,  0],
@@ -360,7 +361,7 @@ hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', ''))
 hdu.scale('int16', bzero=32768, bscale=1)
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 
 #=========LoopDisplaySrv.UNSCR_MAP.fits=================
@@ -376,7 +377,7 @@ hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', ''))
 hdu.scale('int16', bzero=32768, bscale=1)
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 
 #=========LoopDisplaySrv.HODM_MAP.fits=================
@@ -399,7 +400,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=32768, bscale=1)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=======LoodDisplaySrv.HODM_MAP_test.fits==================
 data = numpy.zeros((9,9), dtype = numpy.int16)
@@ -409,7 +410,7 @@ hdu.header.add_comment(comment)
 hdu.scale('int16', bzero=32768, bscale=1)
 hdu.header.append(('EXTNAME', ''))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========LoopMonitor.POSITIONS2FOCUS.fits=================
 data = numpy.zeros((1, nacts), dtype=numpy.float32)
@@ -423,7 +424,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'LoopMonitor.POSITIONS2FOCUS'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========LoopMonitor.DMPOS_PROJ.fits=================
 data = numpy.zeros((nacts, nacts), dtype=numpy.float32)
@@ -437,7 +438,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'LoopMonitor.DMPOS_PROJ'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========LoopMonitor.SLOPES2FOCUS.fits=================
 data = numpy.zeros((1, naps*2), dtype=numpy.float32)
@@ -451,7 +452,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'LoopMonitor.SLOPES2FOCUS'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========LoopMonitor.SLOPES2TT.fits=================
 data = numpy.zeros((2, naps*2), dtype=numpy.float32)
@@ -466,7 +467,7 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'LoopMonitor.SLOPES2TT'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 #=========RTC.PROJ_HODM_FOCUS.fits=================
 data = numpy.zeros((1, nacts), dtype=numpy.float32)
@@ -477,7 +478,36 @@ hdu = pyfits.PrimaryHDU(data)
 hdu.header.add_comment(comment)
 hdu.header.append(('EXTNAME', 'RTC.PROJ_HODM_FOCUS'))
 
-hdu.writeto(outfile, clobber=True)
+hdu.writeto("Output/"+outfile, clobber=True)
 
 
+#=========TTCtr.SEC_ACT_UNSCR_MAP=====
+data = numpy.arange(nacts, dtype=numpy.int32)
+
+outfile = 'TTCtr.SEC_ACT_UNSCR_MAP.fits'
+
+hdu = pyfits.PrimaryHDU(data)
+hdu.header.add_comment(comment)
+hdu.scale('int32', bzero=0, bscale=1)
+hdu.header.append(('EXTNAME', ''))
+
+hdu.writeto("Output/"+outfile, clobber=True)
+
+#========TTCtr.TERM_A
+data = [1.0]
+data = numpy.array(data, dtype ='float32')
+outfile = "TTCtr.TERM_A.fits"
+hdu = pyfits.PrimaryHDU(data)
+hdu.header.add_comment(comment)
+hdu.header.append(('EXTNAME', ''))
+hdu.writeto("Output/"+outfile, clobber=True)
+
+#========TTCtr.TERM_B
+data = [ 0.1, 0.0]
+data = numpy.array(data, dtype ='float32')
+outfile = "TTCtr.TERM_B.fits"
+hdu = pyfits.PrimaryHDU(data)
+hdu.header.add_comment(comment)
+hdu.header.append(('EXTNAME', ''))
+hdu.writeto("Output/"+outfile, clobber=True)
 

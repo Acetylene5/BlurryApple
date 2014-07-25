@@ -15,7 +15,7 @@ import scipy.io
 if __name__ == "__main__":
 
     #data_dir = '/home/zimmerman/Data/GRAVITY/fisba/poke_run_2012march12'
-    data_dir = '/home/deen/Data/GRAVITY/InfluenceFunctions'
+    data_dir = '/home/deen/Data/GRAVITY/InfluenceFunctions/IFs_nov82013'
     assert(os.path.exists(data_dir)), 'Error: hard-coded raw data directory %s does not exist' % data_dir
     N_act = 60
 

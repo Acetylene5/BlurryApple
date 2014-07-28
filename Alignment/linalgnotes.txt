@@ -1,0 +1,90 @@
+Equation of a line in parametric form:
+x = x0 + at
+y = y0 + bt
+z = z0 + ct
+
+How to describe a plane:
+point in plane and normal vector
+(x1, y1, z1), <x, y, z>
+
+Ax + By + Cz = D
+
+so, if I can express the plane in an equation like the above, 
+
+A(x0+at) + B(y0+bt) + C(z0+ct) = D
+A(x0) + Aat + B(y0)+ Bbt + C(z0) + Cct = D
+(Aa + Bb + Cc)t = D-A(x0)-B(y0)-C(z0)
+t = (D-A(x0)-B(y0)-C(z0))/(Aa + Bb + Cc)
+
+Then, plug into the parametric equation for the line, figure out the coordinates of the intersection
+
+How to convert plane and normal vector to the single equation?
+what do I know?
+1) one point in the plane
+2) that the normal vector is perpendicular to any line in the plane.
+
+What does perpendicularity mean?  The dot product of two vectors is zero
+
+So, I can probably use this fact to find the partial derivatives in all three directions
+
+What is a dot product?
+
+A.B = Ax*Bx + Ay*By + Az*Bz
+
+So, to find the slope in the X-Y plane, set the slope Bz to zero
+To find the slope in the Y-Z plane, set the slope Bx to zero
+To find the slope in the X-Z plane, set the slope By to zero
+
+This doesn't make any sense.
+
+A.B_(xy) = Ax*Bx + Ay*By + Az*0 = 0
+
+Just need to find a vector perpendicular to the normal vector (and hence in the plane)
+
+A.B = 0
+
+However, this means that I have 3 unknowns and only one equation.
+
+Perhaps, I could use the origin, the point in the plane, the normal vector, and A.B=0 to find other points in the plane.  Then, I could use these calculated points to define the slopes
+
+Point1 = x1, y1, z1
+Point2 = x1, y2, z2 (move y2 by a given amount, calculate z2)
+
+vector (B) between P1, P2:  <0, y2-y1, z2-z1>
+
+Know that A.B must == 0
+
+Therefore Ay*(y2-y1) + Az*(z2-z1) == 0
+
+The only unknown quantity here is z2:
+
+z2 = -Ay*(y2-y1)/Az + z1
+
+<0, y2-y1, z2-z1> is the slope in the YZ plane
+
+Maybe now take the cross product between this vector and the normal vector to give another vector in the plane.  But wouldn't this just the slope in the XZ (or XY) plane?
+
+<x2-x1, 0, z2-z1> is the slope in the XZ plane
+<x2-x1, y2-y1, 0> is the slope in the XY plane
+
+This exercise will give 4 points in the plane
+p1 (original point)
+p2 (point in YZ plane)
+p3 (point in XZ plane)
+p4 (point in XY plane)
+
+All these points must satisfy the plane equation:
+Ax1 + By1 + Cz1 = D
+Ax2 + By2 + Cz2 = D
+Ax3 + By3 + Cz3 = D
+Ax4 + Cy4 + Cz4 = D
+
+Four equations, four unknowns!  We can solve!
+
+Looks like some linear algebra is in order
+
+|x1 y1 z1| [A B C] = |1|
+|x2 y2 z2|           |1|
+|x3 y3 z3|           |1|
+
+

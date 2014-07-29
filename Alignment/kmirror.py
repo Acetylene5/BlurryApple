@@ -2,6 +2,30 @@ import scipy
 import numpy
 import matplotlib.pyplot as pyplot
 
+class Derotator( object ):
+    def __init__(self):
+        self.Z = 15.0   # mm
+        self.Y = 30.0   # mm
+        self.theta = numpy.arctan2(self.Z, self.Y)
+        self.beta = numpy.pi/4.0 + self.theta/2.0
+        self.mirror1 = Plane(Point(0.0, 0.0, self.Z), numpy.array([0.0,
+            numpy.sin(self.beta), numpy.cos(self.beta)]))
+        self.mirror2 = Plane(Point(0.0, self.Y, 0.0), numpy.array([0.0, -1.0,
+            0.0]))
+        self.mirror3 = Plane(Point(0.0, 0.0, -self.Z), numpy.array([0.0,
+            numpy.sin(self.beta), -numpy.cos(self.beta)]))
+
+    def rotate(self, angle):
+        self.mirror1.rotate(angle)
+        self.mirror2.rotate(angle)
+        self.mirror3.rotate(angle)
+
+    def propogate(self, line):
+        r1 = self.mirror1.reflection(line)
+        r2 = self.mirror2.reflection(r1)
+        r3 = self.mirror3.reflection(r2)
+        return r3
+
 class Point( object ):
     def __init__(self, x, y, z):
         self.x = x
@@ -28,6 +52,13 @@ class Plane( object ):
     def __init__(self, p, normal):
         self.p = p
         self.normal = normal/numpy.sqrt(numpy.sum(numpy.square(normal)))
+        self.calculatePlaneEqn()
+
+    def rotate(self, p, angle):
+        calculate_distance_to_plane_from_point()
+        vector = p - self.p
+        calculate_new_point()
+        rotate_normal()
         self.calculatePlaneEqn()
 
     def calculatePlaneEqn(self):
@@ -77,7 +108,6 @@ class Plane( object ):
 
     def intersection(self, line):
         dotproduct = numpy.dot(self.normal, line.slope)
-        print("%3.2f" % dotproduct)
         if dotproduct == 0.0:
             return False
         else:
@@ -88,21 +118,40 @@ class Plane( object ):
             return line.traverse(t)
 
     def reflection(self, line):
-        point,  = self.intersection(line)
-        if point:
-            newLine = Line(point, slope)
+        reflection = self.intersection(line)
+        if reflection:
+            dot = numpy.dot(self.normal, line.slope)
+            newx = line.a - 2*dot*self.normal[0]
+            newy = line.b - 2*dot*self.normal[1]
+            newz = line.c - 2*dot*self.normal[2]
+            newLine = Line(reflection, [newx, newy, newz])
+            return newLine
         else:
             print "Error! Line does not intersect plane!"
+            return False
 
         
 
 origin = Point(0.0, 0.0, 0.0)
-p1 = Point(1.0, 2.45, 3.24)
+p1 = Point(0.01, 0.0, 0.0)
+p2 = Point(0.00, 0.01, 0.0)
 
+derot = Derotator()
 
-l1 = Line(origin, [1.0, 0.0, 0.0])
-plane1 = Plane(p1, [1.0, 1.0, 0.0])
+l0 = Line(origin, [0.0, 0.0, -1.0])
+l1 = Line(p1, [0.0, 0.0, -1.0])
+l2 = Line(p2, [0.0, 0.0, -1.0])
 
-print p1.x*plane1.coeffs[0]+p1.y*plane1.coeffs[1]+p1.z*plane1.coeffs[2]
+detectorPlane = Plane(Point(0.0, 0.0, -50.0), numpy.array([0.0, 0.0, 1.0]))
 
-intersec = plane1.intersection(l1)
+a = derot.propogate(l0)
+b = derot.propogate(l1)
+c = derot.propogate(l2)
+
+a_end = detectorPlane.intersection(a)
+b_end = detectorPlane.intersection(b)
+c_end = detectorPlane.intersection(c)
+
+print a_end.x, a_end.y
+print b_end.x, b_end.y
+print c_end.x, c_end.y

@@ -15,7 +15,6 @@ class Derotator( object ):
             0.0]))
         self.mirror3 = Plane(Point(0.0, 0.0, -self.Z), numpy.array([0.0,
             numpy.sin(self.beta), -numpy.cos(self.beta)]))
-        self.origin = Point(0.0, 0.0, 0.0)
 
     def rotate(self, angle):
         self.mirror1.rotate(self.origin, angle, numpy.array([0.0, 0.0, 1.0]))

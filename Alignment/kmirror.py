@@ -227,6 +227,8 @@ l4 = Line(origin, [0.00028, 0.0, -1.0])
 
 detectorPlane = Plane(Point(0.0, 0.0, -1000.0), numpy.array([0.0, 0.0, 1.0]))
 
+pupilPlane = Plane(Point(0.0, 0.0, -500.0), numpy.array([0.0, 0.0, 1.0]))
+
 nsteps = 51
 dangle = 2.0*numpy.pi/nsteps
 

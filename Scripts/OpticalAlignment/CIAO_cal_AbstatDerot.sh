@@ -1,4 +1,4 @@
-# Purpose: To check for static aberrations due to the derotator
+# Purpose: To check for/measure static aberrations due to the derotator
 # Description: A point source created by the LSM is observed by the WFS.  The
 # WFS subaperture fluxes and slopes are measured as a full rotation of the
 # derotator is made.  The corrections to the reference slopes are calculated

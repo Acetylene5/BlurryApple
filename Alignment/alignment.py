@@ -120,7 +120,7 @@ fig.clear()
 ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
 #ax.plot(cleaned.sum(axis=0)/len(cleaned[:,0]))
 ax.imshow(cleaned)
-ax.scatter(xc, yc, color = 'r')
+ax.scatter(xc, yc, color = 'y')
 fig.show()
 
 #stacked.show()

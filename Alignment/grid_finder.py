@@ -3,6 +3,7 @@ import numpy
 import scipy
 import matplotlib.pyplot as pyplot
 
+#Calculates the nominal x and y positions for the images of the lenslet array
 
 def generate_model(npeaks, height, fwhm, spacing):
     feature_width = int(npeaks*spacing+4*fwhm)

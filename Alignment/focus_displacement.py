@@ -1,6 +1,9 @@
 import scipy
 import numpy
 
+#This routine calculates the displacement of the focus point given
+#an entrance window of index n and thickness d
+
 n = 3.4
 
 d = 2.0       #mm

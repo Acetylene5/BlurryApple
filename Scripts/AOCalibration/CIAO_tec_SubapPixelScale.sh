@@ -12,3 +12,18 @@ Move Derotator to nominal postion
 Apply derotator-specific correction to reference slopes
 Apply Flat Pattern + Static Aberrations
 Center the Tip/Tilt Mount
+Verify gradients are within a given range of stored values
+
+# Perform measurements
+Apply a calibrated tilt of a known angle.
+Record subaperture positions/gradients
+Return Tilt mount to the nominal position
+Apply a calibrated tip of a known angle
+Record subaperture positions/gradients
+Return Tip mount to the nominal position
+
+Calculate mean pixel shift for known angle.
+Store in CDMS
+
+Turn off Nasmyth light source
+

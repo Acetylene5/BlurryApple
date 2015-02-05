@@ -71,7 +71,7 @@ class detector( object ):
     def __init__(self):
         self.lenslet = lensletArray()
         self.wavefront = waveFront()
-        self.nx = 96
+        self.nx = 72
         self.ny = 72
         self.spacing = 15.0 #microns  Is this value correct?
         self.xpix = (numpy.arange(self.nx)-self.nx/2.0)*self.spacing
@@ -81,6 +81,47 @@ class detector( object ):
         self.z = []
         self.frames = []
         self.centroids = []
+        self.scramblingMap = pyfits.getdata("../../Maps/Archive/scramblemap.fits")
+        self.unscramblingMap = pyfits.getdata("../../Maps/Archive/unscramblemap.fits")
+        self.windowMap = pyfits.getdata("../../Maps/Archive/windowmap.fits")
+
+    def scrambleFrame(self):
+        #"""
+        scrambledFrame = numpy.zeros(6912)
+        flatframe = self.z[-1].ravel()
+        for y, i in zip(flatframe, self.scramblingMap):
+            scrambledFrame[i]=y
+
+        self.frames.append(scrambledFrame)
+        """
+
+        scrambledFrame = numpy.zeros(5184)
+        HRframe = self.z[-1].ravel()
+        for y, i in zip(HRframe, self.unscramblingMap):
+            scrambledFrame[i] = y
+        #"""
+
+        largeScrambledFrame = numpy.zeros(6912)
+        j = 0
+        for i in range(6912):
+            if self.windowMap[i] == 1:
+                largeScrambledFrame[i] = scrambledFrame[j]
+                j += 1
+
+
+        #self.frames.append(largeScrambledFrame)
+        
+
+    def makeRamp(self):
+        z = numpy.zeros((self.ny, self.nx))
+        k = 0
+        for i in range(self.nx):
+            for j in range(self.ny):
+                z[i][j] = k
+                k += 1
+        self.z.append(z)
+        self.scrambleFrame()
+        self.centroids.append([])
 
     def generateFrame(self, zern):
         """
@@ -101,7 +142,8 @@ class detector( object ):
                              numpy.exp(-(self.xpix[xcoord]+x*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+y*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1]))
                 z[ycoord][xcoord] = numpy.average(pix)
         self.z.append(z)
-        self.frames.append(z.ravel())
+        self.scrambleFrame()
+        #self.frames.append(z.ravel())
         self.centroids.append(centroids)
 
     def calculateCentroids(self, zern):

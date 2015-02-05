@@ -34,8 +34,8 @@ ax4 = fig.add_axes([0.5, 0.5, 0.4, 0.4])
 
 ax1.imshow(detector.z[0])
 ax2.imshow(detector.z[1])
-ax3.imshow(detector.z[2])
-ax4.imshow(detector.z[3])
+ax3.imshow(detector.z[5])
+ax4.imshow(detector.z[6])
 fig.savefig("Zernike.png")
 fig.show()
 #"""

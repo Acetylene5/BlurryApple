@@ -134,16 +134,22 @@ class detector( object ):
         z = numpy.zeros((self.ny, self.nx))
         for xcoord in range(self.nx):
             for ycoord in range(self.ny):
+                """
                 #Subsamples the pixel an calculates average flux
                 pix = numpy.zeros((10, 10))
                 for x in numpy.arange(10):
                     for y in numpy.arange(10):
                         pix[x][y] = self.amplitude*sum(
-                             numpy.exp(-(self.xpix[xcoord]+x*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+y*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1]))
+                             numpy.exp(-(self.xpix[xcoord]+x*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+y*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1]) + numpy.exp(-(self.xpix[xcoord]+x*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+(y+1.0)*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1])+numpy.exp(-(self.xpix[xcoord]+(x+1.0)*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+y*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1]) + numpy.exp(-(self.xpix[xcoord]+(x+1.0)*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+(y+1.0)*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1]))/4.0
                 z[ycoord][xcoord] = numpy.average(pix)
+                """
+                z[ycoord][xcoord] = self.amplitude*sum(
+                   numpy.exp(-(self.xpix[xcoord]+self.spacing/
+                       2.0-centroids[:,0])**2.0/self.stdev[0])*
+                   numpy.exp(-(self.ypix[ycoord]+self.spacing/
+                       2.0-centroids[:,1])**2.0/self.stdev[1]))
         self.z.append(z)
         self.scrambleFrame()
-        #self.frames.append(z.ravel())
         self.centroids.append(centroids)
 
     def calculateCentroids(self, zern):

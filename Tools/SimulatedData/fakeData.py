@@ -11,17 +11,17 @@ print "Flat"
 detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0])
 #"""
 print "Tip"
-detector.generateFrame([100.0, 0.0, 0.0, 0.0, 0.0])
+detector.generateFrame([10.0, 0.0, 0.0, 0.0, 0.0])
 print "Tilt"
-detector.generateFrame([0.0, 100.0, 0.0, 0.0, 0.0])
+detector.generateFrame([0.0, 10.0, 0.0, 0.0, 0.0])
 print "Defocus"
-detector.generateFrame([0.0, 0.0, 50.0, 0.0, 0.0])
+detector.generateFrame([0.0, 0.0, 10.0, 0.0, 0.0])
 print "Astigmatism 1"
-detector.generateFrame([0.0, 0.0, 0.0, 50.0, 0.0])
+detector.generateFrame([0.0, 0.0, 0.0, 10.0, 0.0])
 print "Astigmatism 2"
-detector.generateFrame([0.0, 0.0, 0.0, 0.0, 50.0])
+detector.generateFrame([0.0, 0.0, 0.0, 0.0, 10.0])
 print "Random"
-detector.generateFrame((scipy.random.rand(5)-0.5)*50.0)
+detector.generateFrame((scipy.random.rand(5)-0.5)*10.0)
 #"""
 detector.saveFrames("PureZernikes.fits")
 detector.saveCentroids("ZernikeCentroids.fits")
@@ -36,6 +36,6 @@ ax1.imshow(detector.z[0])
 ax2.imshow(detector.z[1])
 ax3.imshow(detector.z[5])
 ax4.imshow(detector.z[6])
-fig.savefig("Zernike.png")
+#fig.savefig("Zernike.png")
 fig.show()
 #"""

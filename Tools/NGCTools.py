@@ -205,7 +205,7 @@ class lensletArray( object ):
     """
     This class simulates the lenslet array
     """
-    def __init__(self, spacing=120.0, fl=100.0):
+    def __init__(self, spacing=120.0, fl=1000.0):
         """
             Spacing - spacing between adjacent lenslets (in microns)
             fl - focal length of individual lenslet (in microns)
@@ -236,7 +236,7 @@ class waveFront( object ):
     """
     This object describes the wavefront as it hits the detector
     """
-    def __init__(self, beamSize=1060.0):
+    def __init__(self, beamSize=1080.0):
         self.beamSize = beamSize
         self.tip = zernikeMode(2, 0.00)
         self.tilt = zernikeMode(3, 0.00)

@@ -22,20 +22,13 @@ def send_actuator_positions_to_DM(actuator_positions):
     wave_guess = actuator_positions
     #print "Sent Actuator Positions to DM!"
 
-def get_RMS():
-    value = sinewave - wave_guess
-    return value.std()
+def getStrehlRatio():
+    image = getImage()
 
-def get_PV():
-    value = sinewave - wave_guess
-    return value.max() - value.min()
-
-def get_interferogram_from_FISBA():
-    print "Got Interferogram from FISBA"
-    return "Blah"
-
-def calculate_RMS(interferogram):
-    return 1.0
+def getImage():
+    """
+       Returns an image from the camera
+    """
 
 def within_limits(actuator_positions):
     for actpos in actuator_positions:
@@ -49,8 +42,7 @@ def eval_func(deltas):
     actuator_positions = base_map + deltas.genomeList
     if within_limits(actuator_positions):
         send_actuator_positions_to_DM(actuator_positions)
-        #score = get_RMS()
-        score = get_RMS() + get_PV()
+        score = calculateStrehl()
     else:
         score = numpy.finfo(numpy.float).max
     #interferogram = get_interferogram_from_FISBA()

@@ -39,3 +39,6 @@ ax4.imshow(detector.z[6])
 #fig.savefig("Zernike.png")
 fig.show()
 #"""
+
+
+#Kolmorogorov turbulence spectrum

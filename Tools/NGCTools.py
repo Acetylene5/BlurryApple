@@ -73,7 +73,7 @@ class detector( object ):
         self.wavefront = waveFront()
         self.nx = 72
         self.ny = 72
-        self.spacing = 15.0 #microns  Is this value correct?
+        self.spacing = 24.0 #microns  Is this value correct?
         self.xpix = (numpy.arange(self.nx)-self.nx/2.0)*self.spacing
         self.ypix = (numpy.arange(self.ny)-self.ny/2.0)*self.spacing
         self.stdev = (8.0*self.spacing, 8.0*self.spacing)
@@ -205,7 +205,7 @@ class lensletArray( object ):
     """
     This class simulates the lenslet array
     """
-    def __init__(self, spacing=120.0, fl=1000.0):
+    def __init__(self, spacing=192.0, fl=2095.0):
         """
             Spacing - spacing between adjacent lenslets (in microns)
             fl - focal length of individual lenslet (in microns)
@@ -236,7 +236,7 @@ class waveFront( object ):
     """
     This object describes the wavefront as it hits the detector
     """
-    def __init__(self, beamSize=1080.0):
+    def __init__(self, beamSize=1776.0):
         self.beamSize = beamSize
         self.tip = zernikeMode(2, 0.00)
         self.tilt = zernikeMode(3, 0.00)
@@ -320,3 +320,5 @@ class frameBuffer( object ):
         self.centroids = numpy.array(self.centroids)
         hdu = pyfits.PrimaryHDU(self.centroids)
         hdu.writeto(filename, clobber=True)
+
+

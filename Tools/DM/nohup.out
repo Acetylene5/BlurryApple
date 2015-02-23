@@ -1,5 +1,0 @@
-Object::connect: No such signal org::freedesktop::UPower::DeviceAdded(QDBusObjectPath)
-Object::connect: No such signal org::freedesktop::UPower::DeviceRemoved(QDBusObjectPath)
-gwenview(7496)/kdeui (kdelibs): Attempt to use QAction "edit_redo" with KXMLGUIFactory! 
-gwenview(7496)/kdeui (kdelibs): Attempt to use QAction "edit_undo" with KXMLGUIFactory! 
-gwenview(7496) Gwenview::ViewMainPagePrivate::setCurrentView: No index found for current view 

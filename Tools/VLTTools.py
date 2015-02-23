@@ -14,50 +14,66 @@ class VLTConnection( object ):
         - what else?
 
     """
-    def __init__(self, hostname, username):
+    def __init__(self, hostname, username, simulate=True):
         self.hostname = hostname
         self.username = username
-        self.ssh = paramiko.SSHClient()
-        self.ssh.load_system_host_keys()
-        self.ssh.connect(self.hostname, username=self.username)
-        self.ftp = self.ssh.open_sftp()
+        if not(simulate):
+            self.ssh = paramiko.SSHClient()
+            self.ssh.load_system_host_keys()
+            self.ssh.connect(self.hostname, username=self.username)
+            self.ftp = self.ssh.open_sftp()
         self.localpath = './data/'
         self.remotepath = './local/test/'
         self.CDMS = CDMS()
+        self.sim = simulate
 
-    def sendCommand(self, command):
-        stdin, stdout, stderr = self.ssh.exec_command(command)
-        while not stdout.channel.exit_status_ready():
-            if stdout.channel.recv_ready():
-                rl, wl, xl = select.select([stdout.channel], [], [], 0.0)
-                if len(rl) > 0:
-                    print stdout.channel.recv(1024)
+    def simulate(self):
+        self.sim = True
 
-    def set_new_HO_flat_map(self, pattern):
-        self.CDMS.maps["HOCtr.ACT_POS_REF_MAP"].replace(pattern)
-        self.CDMS.maps["HOCtr.ACT_POS_REF_MAP"].write(path=self.localpath)
-        name = self.CDMS.maps["HOCtr.ACT_POS_REF_MAP"].outfile
-        self.ftp.put(self.localpath+name, self.remotepath+name)
-        #print "Put flat map on "+self.hostname
-        #print "Applying flat map to CDMS"
-        stdin, stdout, stderr = self.ssh.exec_command("cdmsLoad -f "+self.remotepath+name+" HOCtr.ACT_POS_REF_MAP --rename")
-        while not stdout.channel.exit_status_ready():
-            if stdout.channel.recv_ready():
-                rl, wl, xl = select.select([stdout.channel], [], [], 0.0)
-                if len(rl) > 0:
-                    print stdout.channel.recv(1024)
+    def goLive(self):
+        self.sim = False
 
-    def set_new_TT_flat_map(self, pattern):
-        self.CDMS.maps["TTCtr.ACT_POS_REF_MAP"].replace(pattern)
-        self.CDMS.maps["TTCtr.ACT_POS_REF_MAP"].write(path=self.localpath)
-        name = self.CDMS.maps["TTCtr.ACT_POS_REF_MAP"].outfile
-        self.ftp.put(self.localpath+name, self.remotepath+name)
-        stdin, stdout, stderr = self.ssh.exec_command("cdmsLoad -f "+self.remotepath+name+" TTCtr.ACT_POS_REF_MAP --rename")
-        while not stdout.channel.exit_status_ready():
-            if stdout.channel.recv_ready():
-                rl, wl, xl = select.select([stdout.channel], [], [], 0.0)
-                if len(rl) > 0:
-                    print stdout.channel.recv(1024)
+    def sendCommand(self, command, response=False):
+        if not(self.sim):
+            stdin, stdout, stderr = self.ssh.exec_command(command)
+            if response:
+                retval = []
+            while not stdout.channel.exit_status_ready():
+                if stdout.channel.recv_ready():
+                    rl, wl, xl = select.select([stdout.channel], [], [], 0.0)
+                    if len(rl) > 0:
+                        received = stdout.channel.recv(1024)
+                        if response:
+                            retval.append(received)
+                        else:
+                            print received
+        else:
+            print("VLT Connection in Simulation mode.  The command I would have sent is:")
+            print(command)
+            response = []
+        if response:
+            return retval
+
+
+    def parse(self, text):
+        print text
+        return 0.0
+
+    def set_Tip(self, tip):
+        self.sendCommand("msgSend \"\" CDMSGateway SETMAP \"-object TTCtr.ACT_POS_REF_MAP -function 0,0="+str("%.2g" % tip)+"\"")
+        self.sendCommand("msgSend \"\" spaccsServer EXEC \"-command TTCtr.update ALL\"")
+
+    def set_Tilt(self, tilt):
+        self.sendCommand("msgSend \"\" CDMSGateway SETMAP \"-object TTCtr.ACT_POS_REF_MAP -function 0,1="+str("%.2g" % tilt)+"\"")
+        self.sendCommand("msgSend \"\" spaccsServer EXEC \"-command TTCtr.update ALL\"")
+
+    def get_Tip(self):
+        tip = self.sendCommand("msgSend \"\" CDMSGateway GETMAP \"-object TTCtr.ACT_POS_REF_MAP -function 0,0\"", response=True)
+        return self.parse(tip)
+
+    def get_Tilt(self):
+        tilt = self.sendCommand("msgSend \"\" CDMSGateway GETMAP \"-object TTCtr.ACT_POS_REF_MAP -function 0,1\"", response=True)
+        return self.parse(tilt)
 
     def set_TT_gain(self, gain):
         self.sendCommand("msgSend \"\" CDMSGateway SETMAP \"-object TTCtr.TERM_B -function 0,0="+str("%.2g" % gain)+"\"")
@@ -66,6 +82,22 @@ class VLTConnection( object ):
     def set_HO_gain(self, gain):
         self.sendCommand("msgSend \"\" CDMSGateway SETMAP \"-object HOCtr.TERM_B -function 0,0="+str("%.2g" % gain)+"\"")
         self.sendCommand("msgSend \"\" spaccsServer EXEC \"-command HOCtr.update ALL\"")
+
+    def get_HO_ACT_POS_REF_MAP(self):
+        name = self.CDMS.maps["HOCtr.ACT_POS_REF_MAP"].outfile
+        command = "cdmsSave -f "+self.remotepath+name+" HOCtr.ACT_POS_REF_MAP"
+        self.sendCommand(command)
+        if not(self.sim):
+            self.ftp.get(self.remotepath+name, self.localpath+name)
+        return pyfits.getdata(self.localpath+name)
+
+    def get_TT_ACT_POS_REF_MAP(self):
+        name = self.CDMS.maps["TTCtr.ACT_POS_REF_MAP"].outfile
+        command = "cdmsSave -f "+self.remotepath+name+" TTCtr.ACT_POS_REF_MAP"
+        self.sendCommand(command)
+        if not(self.sim):
+            self.ftp.get(self.remotepath+name, self.localpath+name)
+        return pyfits.getdata(self.localpath+name)
 
     def set_gain(self, gain):
         termA = numpy.array([-1], dtype='float32')
@@ -138,18 +170,10 @@ class VLTConnection( object ):
     def get_InteractionMatrices(self):
         HOname = self.CDMS.maps["HORecnCalibrat.RESULT_IM"].outfile
         TTname = self.CDMS.maps["TTRecnCalibrat.RESULT.IM"].outfile
-        stdin, stdout, stderr = self.ssh.exec_command("cdmsSave -f "+self.remotepath+HOname+" HORecnCalibrat.RESULT_IM")
-        while not stdout.channel.exit_status_ready():
-            if stdout.channel.recv_ready():
-                rl, wl, xl = select.select([stdout.channel], [], [], 0.0)
-                if len(rl) > 0:
-                    print stdout.channel.recv(1024)
-        stdin, stdout, stderr = self.ssh.exec_command("cdmsSave -f "+self.remotepath+TTname+" TTRecnCalibrat.RESULT.IM")
-        while not stdout.channel.exit_status_ready():
-            if stdout.channel.recv_ready():
-                rl, wl, xl = select.select([stdout.channel], [], [], 0.0)
-                if len(rl) > 0:
-                    print stdout.channel.recv(1024)
+        command = "cdmsSave -f "+self.remotepath+HOname+" HORecnCalibrat.RESULT_IM"
+        self.sendCommand(command)
+        command = "cdmsSave -f "+self.remotepath+TTname+" TTRecnCalibrat.RESULT.IM"
+        self.sendCommand(command)
         self.ftp.get(self.remotepath+HOname, self.localpath+HOname)
         self.ftp.get(self.remotepath+TTname, self.localpath+TTname)
         return HOname, TTname

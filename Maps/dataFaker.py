@@ -28,34 +28,36 @@ ny = 72
 
 npix = nx*ny
 
-apertureMap = [[True, True, True, True, True, True, True, True, True],
+apertureMap = [[False, False, True, True, True, True, True, False, False],
+               [False, True, True, True, True, True, True, True, False],
                [True, True, True, True, True, True, True, True, True],
                [True, True, True, True, True, True, True, True, True],
+               [True, True, True, True, False, True, True, True, True],
                [True, True, True, True, True, True, True, True, True],
                [True, True, True, True, True, True, True, True, True],
-               [True, True, True, True, True, True, True, True, True],
-               [True, True, True, True, True, True, True, True, True],
-               [True, True, True, True, True, True, True, True, True],
-               [True, True, True, True, True, True, True, True, True],
-               [True, True, True, True, True, True, True, True, True]]
+               [False, True, True, True, True, True, True, True, False],
+               [False, False, True, True, True, True, True, False, False]]
 
 apertureSize = 8.0
 
-xpos = numpy.linspace(0.0, nx, num=len(apertureMap[0]), 
-        endpoint=False)+nx/(len(apertureMap[0])*2.)
-ypos = numpy.linspace(0.0, ny, num=len(apertureMap),
-        endpoint=False)+ny/(len(apertureMap)*2.)
+#xpos = numpy.linspace(0.0, nx, num=len(apertureMap[0]), 
+#        endpoint=False)+nx/(len(apertureMap[0])*2.)
+#ypos = numpy.linspace(0.0, ny, num=len(apertureMap),
+#        endpoint=False)+ny/(len(apertureMap)*2.)
+xpos = numpy.arange(len(apertureMap[0]))*apertureSize+4.0
+ypos = numpy.arange(len(apertureMap))*apertureSize+4.0
 centroids = []
 for apvec, y in zip(apertureMap, ypos):
     for ap, x in zip(apvec, xpos):
         if ap:
-            centroids.append((numpy.random.rand(2)-0.5)*apertureSize/2.0+(x, y))
+            centroids.append((numpy.random.rand(2)-0.5)*apertureSize/4.0+(x, y))
+            #centroids.append((x, y))
 
 xpix = numpy.arange(nx)
 ypix = numpy.arange(ny)
 
 xx, yy = numpy.meshgrid(xpix, ypix)
-z = numpy.zeros((nx, ny))
+z = numpy.zeros((ny, nx))
 
 stdev = (3.0, 3.0)
 amplitude = 1.0

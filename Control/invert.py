@@ -68,8 +68,6 @@ just_TT = zeros.copy()
 just_TT[-1] = numpy.ones(len(A[0]), dtype = numpy.float32)
 pyfits.writeto("Output/justTT.fits", just_TT, clobber=True)
 
-
-
 f = pyplot.figure(0)
 f.clear()
 ax = f.add_axes([0.1, 0.1, 0.8, 0.8])

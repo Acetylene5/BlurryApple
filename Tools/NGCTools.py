@@ -61,6 +61,30 @@ class zernikeMode(object):
         if (self.m < 0): return nc*self.zernike_rad(rho) * numpy.sin(-self.m*phi)
         return nc*self.zernike_rad(rho)
 
+class pupil( object ):
+    def __init__(self, x, y, radius):
+        self.x = x
+        self.y = y
+        self.radius2 = radius**2.0
+
+    def calculateApertureIllumination(self, corner, size):
+        area = 0.0
+        illuminated = 0.0
+        for x in numpy.linspace(corner[0], corner[1]+size, 50):
+            for y in numpy.linspace(corner[1], corner[1]+size, 50):
+                area += 1.0
+                if ((self.x - x)**2.0 + (self.y - y)**2.0) < self.radius2:
+                    illuminated += 1.0
+        return illuminated/aread
+
+    def getDecenter(self):
+        return self.x, self.y
+
+    def setDecenter(self, x, y):
+        self.x = x
+        self.y = y
+
+
 class detector( object ):
     """
         The Detector class allows us to simulate the detector in the cryostat.
@@ -68,9 +92,11 @@ class detector( object ):
         be able to simulate the effects of simple Zernike aberations of the 
         wave front on the spots on the detector.
     """
-    def __init__(self):
-        self.lenslet = lensletArray()
+    def __init__(self, beamsize=1776.0):
+        self.beamsize = beamsize
+        self.lenslet = lensletArray(beamsize=beamsize)
         self.wavefront = waveFront()
+        self.pupil = pupil(0.0, 0.0, radius=beamsize/2.0)
         self.nx = 72
         self.ny = 72
         self.spacing = 24.0 #microns  Is this value correct?
@@ -123,33 +149,25 @@ class detector( object ):
         self.scrambleFrame()
         self.centroids.append([])
 
-    def generateFrame(self, zern):
+    def generateFrame(self, zern, pupil):
         """
         Generates an image seen by the detector of a wavefront described by
         the zernike coefficients in zern
 
         zern = [tip, tilt, defocus, astig1, astig2]
         """
-        centroids = self.calculateCentroids(zern)
+        self.pupil.setDecenter(pupil)
+        centroids, amplitudes = self.calculateCentroids(zern)
         z = numpy.zeros((self.ny, self.nx))
         for xcoord in range(self.nx):
             for ycoord in range(self.ny):
-                """
-                #Subsamples the pixel an calculates average flux
-                pix = numpy.zeros((10, 10))
-                for x in numpy.arange(10):
-                    for y in numpy.arange(10):
-                        pix[x][y] = self.amplitude*sum(
-                             numpy.exp(-(self.xpix[xcoord]+x*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+y*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1]) + numpy.exp(-(self.xpix[xcoord]+x*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+(y+1.0)*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1])+numpy.exp(-(self.xpix[xcoord]+(x+1.0)*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+y*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1]) + numpy.exp(-(self.xpix[xcoord]+(x+1.0)*self.spacing/10.0-centroids[:,0])**2.0/self.stdev[0])*numpy.exp(-(self.ypix[ycoord]+(y+1.0)*self.spacing/10.0-centroids[:,1])**2.0/self.stdev[1]))/4.0
-                z[ycoord][xcoord] = numpy.average(pix)
-                """
-                z[ycoord][xcoord] = self.amplitude*sum(
+                z[ycoord][xcoord] = amplitudes*sum(
                    numpy.exp(-(self.xpix[xcoord]+self.spacing/
                        2.0-centroids[:,0])**2.0/self.stdev[0])*
                    numpy.exp(-(self.ypix[ycoord]+self.spacing/
                        2.0-centroids[:,1])**2.0/self.stdev[1]))
         self.z.append(z)
-        self.scrambleFrame()
+        #self.scrambleFrame()
         self.centroids.append(centroids)
 
     def calculateCentroids(self, zern):
@@ -160,13 +178,15 @@ class detector( object ):
         self.wavefront.setZern(zern)
         dx = 10.0   # Microns
         dy = 10.0   # Microns
-        retval = []
+        centroids = []
+        intensities = []
+        DCx, DCy = self.pupil.getDecenter()  # Decenter of Pupil
         for c in self.lenslet.coordinates:
             # Calculates the partial derivatives
-            zxp = self.wavefront.calcWaveFront(c[0]+dx, c[1])
-            zxm = self.wavefront.calcWaveFront(c[0]-dx, c[1])
-            zyp = self.wavefront.calcWaveFront(c[0], c[1]+dy)
-            zym = self.wavefront.calcWaveFront(c[0], c[1]-dy)
+            zxp = self.wavefront.calcWaveFront(c[0]+DCx+dx, c[1]+DCy)
+            zxm = self.wavefront.calcWaveFront(c[0]+DCx-dx, c[1]+DCy)
+            zyp = self.wavefront.calcWaveFront(c[0]+DCx, c[1]+DCy+dy)
+            zym = self.wavefront.calcWaveFront(c[0]+DCx, c[1]+DCy-dy)
             delx = (zxp - zxm)/(2)
             dely = (zyp - zym)/(2)
 
@@ -180,9 +200,14 @@ class detector( object ):
             theta_y = scipy.arctan2(normaly, normalz)
             shift_x = scipy.tan(theta_x)*self.lenslet.fl
             shift_y = scipy.tan(theta_y)*self.lenslet.fl
-            retval.append([c[0]+shift_x, c[1]+shift_y])
+            centroids.append([c[0]+shift_x, c[1]+shift_y])
 
-        return numpy.array(retval)
+            intensities.append(self.pupil.calculateApertureIllumination(
+                               c[0]-self.lenslet.spacing/2.0, 
+                               c[1]-self.lenslet.spacing/2.0,
+                               self.lenslet.spacing))
+
+        return numpy.array(centroids), numpy.array(intensities)
 
     def saveFrames(self, filename):
         """
@@ -234,9 +259,9 @@ class lensletArray( object ):
 
 class waveFront( object ):
     """
-    This object describes the wavefront as it hits the detector
+    This object describes the wavefront as it hits the lenslet array
     """
-    def __init__(self, beamSize=1776.0):
+    def __init__(self, beamSize = 1776.0):
         self.beamSize = beamSize
         self.tip = zernikeMode(2, 0.00)
         self.tilt = zernikeMode(3, 0.00)

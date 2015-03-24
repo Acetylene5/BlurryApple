@@ -8,16 +8,18 @@ detector = NGCTools.detector()
 
 print "No Decenter"
 #detector.makeRamp()
-detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0])
+pokes = numpy.zeros(60)
+pokes[0] = 1.1
+detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0], pokes, 0.0)
 #"""
-print "x + 100 microns"
-detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0], [100.0, 0.0])
-print "y + 100 microns"
-detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 100.0])
-print "x - 100, y + 100 microns"
-detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0], [-100.0, 100.0])
+print "Actuator 1"
+detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0], pokes, 45.0)
+print "Actuator 1"
+detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 2.0], pokes, 90.0)
+print "Actuator 3"
+detector.generateFrame([0.0, 0.0, 0.0, 0.0, 0.0], [0.0, 0.0], pokes, 235.0)
 #"""
-detector.saveFrames("PupilShiftFlux.fits")
+detector.saveFrames("PupilShiftSlopes.fits")
 #"""
 fig = pyplot.figure(0)
 ax1 = fig.add_axes([0.1, 0.1, 0.4, 0.4])
@@ -29,7 +31,7 @@ ax1.imshow(detector.z[0])
 ax2.imshow(detector.z[1])
 ax3.imshow(detector.z[2])
 ax4.imshow(detector.z[3])
-fig.savefig("PupilShiftFlux.png")
+#fig.savefig("PupilShiftFlux.png")
 fig.show()
 #"""
 

@@ -1,6 +1,7 @@
 import scipy
 import numpy
 import matplotlib.pyplot as pyplot
+import pyfits
 
 def ring1(x, y):
     global nx
@@ -100,7 +101,7 @@ actuators = []
 
 #xpts = numpy.arange(nx)
 #ypts = numpy.arange(ny)
-grid = numpy.zeros((nx, ny), dtype ='float32')
+grid = numpy.zeros((nx, ny), dtype ='int16')
 #grid = numpy.meshgrid(nx, ny)
 
 #Populate actuators
@@ -142,6 +143,8 @@ for x in range(nx):
                 act.addPixel(x, y)
 
 
+hdu = pyfits.PrimaryHDU(grid.T)
+hdu.writeto("HODM_SUBAP_MAP.fits", clobber=True)
 #for act, value in zip(actuators, flatpattern):
 
 ax.matshow(grid.T, origin='lower')
